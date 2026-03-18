@@ -1,1 +1,629 @@
-# will be sumn
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jayden Shakya</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a0a;
+      --fg: #f0ece4;
+      --accent: #c8f04a;
+      --muted: #3a3a3a;
+      --mid: #888;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      width: 10px; height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.15s ease;
+      transform: translate(-50%, -50%);
+    }
+    .cursor-ring {
+      width: 36px; height: 36px;
+      border: 1px solid rgba(200,240,74,0.4);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, border-color 0.3s;
+    }
+    body:has(a:hover) .cursor-ring,
+    body:has(.work-item:hover) .cursor-ring {
+      width: 60px; height: 60px;
+      border-color: var(--accent);
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 2rem 3rem;
+      mix-blend-mode: difference;
+    }
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 0.15em;
+      color: var(--fg);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      color: var(--fg);
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+    .nav-links a:hover { opacity: 1; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding: 3rem;
+      padding-bottom: 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg-text {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(120px, 22vw, 280px);
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(240,236,228,0.04);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: -0.02em;
+    }
+    .hero-tag {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+    }
+    .hero-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(72px, 13vw, 160px);
+      line-height: 0.9;
+      letter-spacing: -0.01em;
+      overflow: hidden;
+    }
+    .hero-name span { display: block; }
+    .hero-sub {
+      margin-top: 2.5rem;
+      max-width: 420px;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--mid);
+      opacity: 0;
+    }
+    .hero-scroll {
+      position: absolute;
+      right: 3rem; bottom: 3rem;
+      display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+      opacity: 0;
+    }
+    .hero-scroll span {
+      font-size: 0.65rem; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--mid);
+      writing-mode: vertical-rl;
+    }
+    .scroll-line {
+      width: 1px; height: 60px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+    }
+
+    /* DISCIPLINE STRIP */
+    .disciplines {
+      border-top: 1px solid var(--muted);
+      border-bottom: 1px solid var(--muted);
+      padding: 1.5rem 3rem;
+      display: flex; gap: 3rem; align-items: center;
+      overflow: hidden;
+    }
+    .disc-item {
+      font-size: 0.7rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--mid);
+      white-space: nowrap;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .disc-item::before {
+      content: '';
+      width: 4px; height: 4px;
+      background: var(--accent);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* SECTION SHARED */
+    section { padding: 8rem 3rem; }
+    .section-label {
+      font-size: 0.65rem; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 4rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .section-label::after {
+      content: ''; flex: 1; max-width: 60px;
+      height: 1px; background: var(--accent); opacity: 0.4;
+    }
+
+    /* WORK GRID */
+    .work-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5px;
+      background: var(--muted);
+    }
+    .work-item {
+      background: var(--bg);
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      position: relative;
+      cursor: none;
+    }
+    .work-item:first-child { grid-column: span 2; aspect-ratio: 16/7; }
+    .work-placeholder {
+      width: 100%; height: 100%;
+      background: #111;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.6s cubic-bezier(0.16,1,0.3,1);
+    }
+    .work-item:hover .work-placeholder { transform: scale(1.04); }
+    .work-placeholder-inner {
+      text-align: center;
+    }
+    .work-placeholder-inner .work-type {
+      font-size: 0.65rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .work-placeholder-inner .work-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem; color: var(--fg);
+      opacity: 0.15;
+    }
+    .work-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(10,10,10,0.9) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.4s;
+      display: flex; align-items: flex-end;
+      padding: 2rem;
+    }
+    .work-item:hover .work-overlay { opacity: 1; }
+    .work-overlay-text .wt { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; }
+    .work-overlay-text .ws { font-size: 0.7rem; color: var(--mid); letter-spacing: 0.1em; margin-top: 0.25rem; }
+
+    /* ABOUT */
+    .about-inner {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start;
+    }
+    .about-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(48px, 7vw, 96px);
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+    }
+    .about-heading em {
+      font-style: italic; font-family: 'DM Sans', sans-serif;
+      font-size: 0.5em; color: var(--mid); letter-spacing: 0.05em;
+      display: block; margin-bottom: 0.5rem;
+    }
+    .about-body { color: var(--mid); line-height: 1.8; font-size: 0.95rem; }
+    .about-body p + p { margin-top: 1.2rem; }
+    .about-stats {
+      margin-top: 3rem;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+    }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem; color: var(--fg); line-height: 1;
+    }
+    .stat-num span { color: var(--accent); }
+    .stat-label { font-size: 0.7rem; color: var(--mid); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.3rem; }
+
+    /* CONTACT */
+    .contact-section { border-top: 1px solid var(--muted); }
+    .contact-inner { max-width: 700px; }
+    .contact-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(48px, 8vw, 110px);
+      line-height: 0.95; margin-bottom: 2rem;
+    }
+    .contact-heading .accent { color: var(--accent); }
+    .contact-sub { color: var(--mid); font-size: 0.95rem; line-height: 1.7; max-width: 400px; margin-bottom: 3rem; }
+    .contact-email {
+      display: inline-flex; align-items: center; gap: 1rem;
+      font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--fg); text-decoration: none;
+      border-bottom: 1px solid var(--muted); padding-bottom: 0.75rem;
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .contact-email:hover { border-color: var(--accent); color: var(--accent); }
+    .contact-email::after { content: '↗'; font-size: 1.1rem; }
+
+    /* FOOTER */
+    footer {
+      padding: 2rem 3rem;
+      border-top: 1px solid var(--muted);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-name { font-family: 'Bebas Neue', sans-serif; font-size: 0.9rem; letter-spacing: 0.1em; opacity: 0.3; }
+    .footer-copy { font-size: 0.7rem; color: var(--mid); letter-spacing: 0.05em; }
+
+    /* GSAP initial states */
+    .gsap-fade { opacity: 0; }
+    .gsap-up { opacity: 0; transform: translateY(40px); }
+    .hero-line { display: block; overflow: hidden; }
+    .hero-line-inner { display: block; transform: translateY(110%); }
+
+    @media (max-width: 768px) {
+      nav { padding: 1.5rem; }
+      .hero { padding: 1.5rem; padding-bottom: 5rem; }
+      .hero-scroll { right: 1.5rem; bottom: 1.5rem; }
+      section { padding: 5rem 1.5rem; }
+      .disciplines { padding: 1.2rem 1.5rem; gap: 2rem; }
+      .work-grid { grid-template-columns: 1fr; }
+      .work-item:first-child { grid-column: span 1; aspect-ratio: 4/3; }
+      .about-inner { grid-template-columns: 1fr; gap: 3rem; }
+      footer { padding: 1.5rem; flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav>
+    <a href="#" class="nav-logo">JS</a>
+    <ul class="nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-bg-text" id="heroBgText">SHAKYA</div>
+    <p class="hero-tag" id="heroTag">Portfolio — 2025</p>
+    <h1 class="hero-name">
+      <span class="hero-line"><span class="hero-line-inner" id="heroLine1">JAYDEN</span></span>
+      <span class="hero-line"><span class="hero-line-inner" id="heroLine2">SHAKYA</span></span>
+    </h1>
+    <p class="hero-sub" id="heroSub">
+      Digital artist, photographer, and 3D creator based online.
+      Exploring the space between the traditional and the digital.
+    </p>
+    <div class="hero-scroll" id="heroScroll">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- DISCIPLINES -->
+  <div class="disciplines" id="disciplines">
+    <div class="disc-item">Digital Art</div>
+    <div class="disc-item">Traditional Art</div>
+    <div class="disc-item">3D Modelling</div>
+    <div class="disc-item">Photography</div>
+    <div class="disc-item">Video Editing</div>
+    <div class="disc-item">Photo Editing</div>
+    <div class="disc-item">Voice Acting</div>
+    <div class="disc-item">Graphic Effects</div>
+    <div class="disc-item">Graphic Design</div>
+    <div class="disc-item">Photography</div>
+  </div>
+
+  <div class="applications" id="applications">
+    <div class="disc-item">Davinci Resolve</div>
+    <div class="disc-item">Adobe Premiere Pro</div>
+    <div class="disc-item">Adobe Illustrator/div>
+    <div class="disc-item">Adobe Photoshop/div>
+    <div class="disc-item">Krita</div>
+    <div class="disc-item">Blender</div>
+    <div class="disc-item">Sketchup</div>
+    <div class="disc-item">Roblox Studio</div>
+    <div class="disc-item">Inkscape</div>
+    <div class="disc-item">G.I.M.P</div>
+    <div class="disc-item">Photopea</div>
+    <div class="disc-item">Photography</div>
+  </div>
+  
+  <!-- WORK -->
+  <section id="work">
+    <p class="section-label gsap-fade">Selected Work</p>
+    <div class="work-grid">
+
+  <div class="work-item gsap-up">
+    <img src="Clancy2025.png" alt="Clancy Prize 2025" style="width:100%;height:100%;object-fit:cover;">
+    <div class="work-overlay">
+      <div class="work-overlay-text">
+        <p class="wt">Clancy Prize 2025</p>
+        <p class="ws">Nominee — 2025</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="work-item gsap-up">
+    <img src="BTE thumb.png" alt="Digital Marketing" style="width:100%;height:100%;object-fit:cover;">
+    <div class="work-overlay">
+      <div class="work-overlay-text">
+        <p class="wt">BuildTheEarth Promo</p>
+        <p class="ws">Digital Marketing - 2026</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="work-item gsap-up">
+    <img src="Skill Samurai.png" alt="Skill Samurai Tutor" style="width:100%;height:100%;object-fit:cover;">
+    <div class="work-overlay">
+      <div class="work-overlay-text">
+        <p class="wt">Skill Samurai Tutor</p>
+        <p class="ws">STEM Tutoring - 2025-26</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="work-item gsap-up">
+    <img src="PBCF2.png" alt="Education" style="width:100%;height:100%;object-fit:cover;">
+    <div class="work-overlay">
+      <div class="work-overlay-text">
+        <p class="wt">Education</p>
+        <p class="ws">Secondary Student studying at PBCF</p>
+      </div>
+    </div>
+  </div>
+
+      <div class="work-item gsap-up" id="cubeSlot">
+        <canvas id="cubeCanvas" style="width:100%;height:100%;display:block;"></canvas>
+        <div class="work-overlay" style="opacity:1;background:none;align-items:flex-end;">
+          <div class="work-overlay-text">
+            <p class="wt" style="opacity:0.15;font-size:1rem;letter-spacing:0.15em;">SCROLL TO ROTATE</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <p class="section-label gsap-fade">About</p>
+    <div class="about-inner">
+      <div>
+        <h2 class="about-heading gsap-up">
+          <em>The person behind it</em>
+          MAKING THINGS THAT MATTER
+        </h2>
+        <div class="about-stats">
+          <div class="gsap-up">
+            <p class="stat-num">15+<span>+</span></p>
+            <p class="stat-label">Online Commissions</p>
+          </div>
+          <div class="gsap-up">
+            <p class="stat-num">∞<span></span></p>
+            <p class="stat-label">Ideas</p>
+          </div>
+        </div>
+      </div>
+      <div class="about-body gsap-up">
+        <p>
+          Hey! I'm Jayden, an aspiring student currently studying at PATS Fairfield.
+          I specialise in Digital Marketing, Graphics, and Art, both Traditional and Digital.
+        </p>
+        <p>
+          Furthermore, I'm a painter and photographer in my free time. I like experimenting
+          with new ways to achieve a different result!
+        </p>
+        <p>
+          By working with you, I aim to achieve new ways to communicate, sell or market your
+          product. I live in Australia and hence have the AEDT Timezone. See below for commisioning.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact-section">
+    <p class="section-label gsap-fade">Contact</p>
+    <div class="contact-inner">
+      <h2 class="contact-heading gsap-up">
+        LET'S<br><span class="accent">TALK.</span>
+      </h2>
+      <p class="contact-sub gsap-up">
+        Got a project, commission, or just want to talk?
+        Drop in to say hi!
+      </p>
+      <!-- Replace with your real email below -->
+      <a href="mailto:jaydenshakya@displayd.online" class="contact-email gsap-up">jaydenshakya@displayd.online</a>
+    </div>
+  </section>
+
+  <footer>
+    <span class="footer-name">Jayden Shakya</span>
+    <span class="footer-copy">© 2026 - A 1nderscore Website - displayd.online</span>
+  </footer>
+
+  <!-- Three.js + GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    (function loop() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(loop);
+    })();
+
+    // Hero entrance
+    const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+    tl.to('#heroLine1', { y: '0%', duration: 1.1, delay: 0.2 })
+      .to('#heroLine2', { y: '0%', duration: 1.1 }, '-=0.85')
+      .to('#heroTag',   { opacity: 1, y: 0, duration: 0.8 }, '-=0.6')
+      .to('#heroSub',   { opacity: 1, duration: 0.8 }, '-=0.5')
+      .to('#heroScroll',{ opacity: 1, duration: 0.8 }, '-=0.4');
+
+    // Parallax hero background text
+    gsap.to('#heroBgText', {
+      y: 120,
+      ease: 'none',
+      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+    });
+
+    // Disciplines strip scroll
+    gsap.to('.disciplines', {
+      x: -200,
+      ease: 'none',
+      scrollTrigger: { trigger: '.disciplines', start: 'top bottom', end: 'bottom top', scrub: true }
+    });
+
+    // Fade-in elements
+    gsap.utils.toArray('.gsap-fade').forEach(el => {
+      gsap.to(el, {
+        opacity: 1, duration: 0.8,
+        scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' }
+      });
+    });
+
+    // Slide-up elements (staggered per section)
+    document.querySelectorAll('section').forEach(sec => {
+      const items = sec.querySelectorAll('.gsap-up');
+      if (!items.length) return;
+      gsap.to(items, {
+        opacity: 1, y: 0, duration: 0.9,
+        stagger: 0.12, ease: 'power3.out',
+        scrollTrigger: { trigger: sec, start: 'top 75%', toggleActions: 'play none none none' }
+      });
+    });
+
+    // Work items scale on scroll
+    gsap.utils.toArray('.work-item').forEach((item, i) => {
+      gsap.fromTo(item,
+        { scale: 0.94, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.9, ease: 'power3.out',
+          scrollTrigger: { trigger: item, start: 'top 85%', toggleActions: 'play none none none' },
+          delay: i * 0.08
+        }
+      );
+    });
+
+    // Three.js wireframe cube — scroll to rotate
+    (function() {
+      const canvas = document.getElementById('cubeCanvas');
+      const slot   = document.getElementById('cubeSlot');
+      if (!canvas || !slot) return;
+
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setClearColor(0x111111, 1);
+
+      const scene  = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+      camera.position.set(2.4, 1.6, 2.4);
+      camera.lookAt(0, 0, 0);
+
+      // Wireframe cube
+      const geo  = new THREE.BoxGeometry(1.4, 1.4, 1.4);
+      const mat  = new THREE.MeshBasicMaterial({ color: 0xc8f04a, wireframe: true });
+      const cube = new THREE.Mesh(geo, mat);
+      scene.add(cube);
+
+      // Subtle corner dots at each vertex
+      const dotGeo = new THREE.SphereGeometry(0.03, 8, 8);
+      const dotMat = new THREE.MeshBasicMaterial({ color: 0xc8f04a });
+      const positions = geo.attributes.position;
+      const seen = new Set();
+      for (let i = 0; i < positions.count; i++) {
+        const x = Math.round(positions.getX(i) * 10);
+        const y = Math.round(positions.getY(i) * 10);
+        const z = Math.round(positions.getZ(i) * 10);
+        const key = `${x},${y},${z}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        const dot = new THREE.Mesh(dotGeo, dotMat);
+        dot.position.set(positions.getX(i), positions.getY(i), positions.getZ(i));
+        scene.add(dot);
+      }
+
+      function resize() {
+        const w = slot.clientWidth;
+        const h = slot.clientHeight;
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      // Scroll-driven rotation via GSAP scrub
+      const rot = { x: 0.4, y: 0.4 };
+      gsap.to(rot, {
+        x: rot.x + Math.PI * 2.5,
+        y: rot.y + Math.PI * 3.5,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#work',
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1.2
+        },
+        onUpdate: () => {
+          cube.rotation.x = rot.x;
+          cube.rotation.y = rot.y;
+        }
+      });
+
+      // Render loop
+      (function render() {
+        requestAnimationFrame(render);
+        renderer.render(scene, camera);
+      })();
+    })();
+  </script>
+</body>
+</html>
